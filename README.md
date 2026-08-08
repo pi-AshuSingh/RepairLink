@@ -148,7 +148,7 @@
 We believe fixing things shouldn't be boring! RepairLink has its very own custom-produced theme song. 
 Listen to it right here:
 
-<video src="https://github.com/Shreya860/RepairLink/raw/main/theme-song.mp3" controls="controls" style="max-width: 100%;"></video>
+https://github.com/Shreya860/RepairLink/blob/main/theme-song.mp3
 
 ---
 
