@@ -31,7 +31,8 @@ service cloud.firestore {
           !request.resource.data.keys().hasAny(['rating', 'reviewCount', 'jobsCompleted', 'phone', 'gmail', 'lat', 'lng']));
       allow update: if isAdmin() ||
         (request.auth != null && resource.data.uid == request.auth.uid &&
-          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'verified', 'rating', 'reviewCount', 'jobsCompleted', 'phone', 'gmail', 'lat', 'lng']));
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'verified', 'rating', 'reviewCount', 'jobsCompleted', 'phone', 'gmail', 'lat', 'lng'])) ||
+        (request.auth != null && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['totalRatings', 'avgRating']));
       allow delete: if isAdmin();
 
       match /private/contact {
