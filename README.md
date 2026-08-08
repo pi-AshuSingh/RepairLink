@@ -19,6 +19,14 @@
 
 ## 🌟 Comprehensive Feature Set
 
+### 🚀 **Recent Updates & Enhancements**
+- 🛡️ **Robust Security:** Mitigated XSS vulnerabilities by escaping user-generated data across map popups and detail panels.
+- 🎨 **Premium UI/UX Overhaul:** Implemented elegant glassmorphism (frosted glass) effects, smooth hover animations, and a unified pastel mesh gradient background across all pages.
+- 🤖 **Reliable AI Integration:** Deployed a fully responsive, Streamlit-based AI chatbot accessible across all pages (including the admin panel) for seamless assistance.
+- 📱 **Mobile-Optimized Navigation:** Redesigned scrollable sidebars in dashboards ensuring critical actions like "Return to Home" and "Back to Map" are always accessible on small screens.
+- 📊 **Enhanced Admin Analytics:** Added dynamic tracking of new page visits, live Premium user counts, and automated total revenue calculations.
+- ⭐ **Advanced Order Management:** Introduced intuitive Kaarigar rating prompts upon order completion, and interactive stale order tracking for users.
+
 ### ✨ **New Additions & Gamification**
 - 🏆 **Eco-Gamification System:** Users earn "Waste Points" for every completed repair, unlocking progressive levels (Eco-Beginner, Eco-Warrior, Eco-Champion, Eco-Master).
 - 🏅 **Unlockable Badges:** Interactive UI badges unlock based on achievements (*Early Adopter*, *First Repair* 🛠️, *Eco-Saver* 🏆).
