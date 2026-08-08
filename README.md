@@ -46,6 +46,45 @@
 - 💬 **Integrated AI Support:** Floating, draggable AI Chatbot embedded directly into the platform providing instant, contextual assistance.
 - 💳 **Premium Membership Tiers:** Users can subscribe for free priority services and waived upfront connection fees.
 
+## 📊 Platform Analytics & Insights
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Total_Commits-243-blue?style=for-the-badge&logo=github" alt="Total Commits" />
+  <img src="https://img.shields.io/badge/Collaborators-4-purple?style=for-the-badge&logo=github" alt="Collaborators" />
+  <img src="https://img.shields.io/badge/Total_Visits-2175-success?style=for-the-badge&logo=google-analytics" alt="Total Visits" />
+  <img src="https://img.shields.io/badge/Active_Users-19-orange?style=for-the-badge&logo=firebase" alt="Users" />
+  <img src="https://img.shields.io/badge/Verified_Kaarigars-8-green?style=for-the-badge&logo=firebase" alt="Kaarigars" />
+</div>
+
+<br/>
+
+### 👥 Top Contributors
+
+| Collaborator | 🔨 Total Commits | 🌟 Features Added |
+| :--- | :---: | :---: |
+| **Ashutosh Kumar Singh** | 230 | 95 |
+| **Sanvi Gupta** | 11 | 5 |
+| **Shreya860** | 1 | 0 |
+| **Samya Goel** | 1 | 0 |
+
+### 📈 Website Traffic (Page Visits)
+
+| Page | Views | Popularity |
+| :--- | :---: | :--- |
+| **`RepairLink.html`** (Core Map) | **644** | 🟢🟢🟢🟢🟢🟢 |
+| **`index.html`** (Landing Page) | **502** | 🟢🟢🟢🟢🟢 |
+| **`Auth.html`** (Login/Signup) | **286** | 🟢🟢🟢 |
+| **`Admin.html`** | **243** | 🟢🟢 |
+| **`UserDashboard.html`** | **185** | 🟢 |
+| **`Pricing.html`** | **118** | 🟢 |
+| **`AboutUs.html`** | **89** | ⚪ |
+
+### 🔥 Live Firebase Stats Snapshot
+- **Registered Users:** 19 (including 3 kaarigar accounts)
+- **Verified Kaarigars:** 8 (0 pending verifications)
+- **Service Orders:** 6 (1 awaiting approval)
+- **Support Messages:** 5 (3 unread)
+
 ---
 
 ## 🏗️ Project Architecture
