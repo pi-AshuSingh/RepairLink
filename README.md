@@ -146,7 +146,9 @@
 ## 🎵 Our Theme Song
 
 We believe fixing things shouldn't be boring! RepairLink has its very own custom-produced theme song. 
-You can listen to our exclusive track on the **[About Us](https://repairlink-de1ta.web.app/AboutUs.html)** page of our live website.
+Listen to it right here:
+
+<video src="https://github.com/Shreya860/RepairLink/raw/main/theme-song.mp3" controls="controls" style="max-width: 100%;"></video>
 
 ---
 
