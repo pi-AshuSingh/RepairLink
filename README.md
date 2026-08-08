@@ -140,3 +140,21 @@
    ```bash
    npx firebase-tools deploy --only hosting
    ```
+
+---
+
+## 🎵 Our Theme Song
+
+We believe fixing things shouldn't be boring! RepairLink has its very own custom-produced theme song. 
+You can listen to our exclusive track on the **[About Us](https://repairlink-de1ta.web.app/AboutUs.html)** page of our live website.
+
+---
+
+## 🌐 Connect With Us
+
+Join the RepairLink community and stay updated with our mission to build a circular economy:
+
+*   [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/repairlink-official)
+*   [![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/repairlink.in/)
+*   [![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@RepairLink.handleYT)
+
