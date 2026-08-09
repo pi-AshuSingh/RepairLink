@@ -19,6 +19,14 @@
 
 ## 🌟 Comprehensive Feature Set
 
+### 🚀 **Recent Updates & Enhancements**
+- 🛡️ **Robust Security:** Mitigated XSS vulnerabilities by escaping user-generated data across map popups and detail panels.
+- 🎨 **Premium UI/UX Overhaul:** Implemented elegant glassmorphism (frosted glass) effects, smooth hover animations, and a unified pastel mesh gradient background across all pages.
+- 🤖 **Reliable AI Integration:** Deployed a fully responsive, Streamlit-based AI chatbot accessible across all pages (including the admin panel) for seamless assistance.
+- 📱 **Mobile-Optimized Navigation:** Redesigned scrollable sidebars in dashboards ensuring critical actions like "Return to Home" and "Back to Map" are always accessible on small screens.
+- 📊 **Enhanced Admin Analytics:** Added dynamic tracking of new page visits, live Premium user counts, and automated total revenue calculations.
+- ⭐ **Advanced Order Management:** Introduced intuitive Kaarigar rating prompts upon order completion, and interactive stale order tracking for users.
+
 ### ✨ **New Additions & Gamification**
 - 🏆 **Eco-Gamification System:** Users earn "Waste Points" for every completed repair, unlocking progressive levels (Eco-Beginner, Eco-Warrior, Eco-Champion, Eco-Master).
 - 🏅 **Unlockable Badges:** Interactive UI badges unlock based on achievements (*Early Adopter*, *First Repair* 🛠️, *Eco-Saver* 🏆).
@@ -37,6 +45,45 @@
 - 🌐 **Bilingual Accessibility:** Instant English ↔ Hindi localization toggle, keeping the UI inclusive for diverse demographics without layout shifts.
 - 💬 **Integrated AI Support:** Floating, draggable AI Chatbot embedded directly into the platform providing instant, contextual assistance.
 - 💳 **Premium Membership Tiers:** Users can subscribe for free priority services and waived upfront connection fees.
+
+## 📊 Platform Analytics & Insights
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Total_Commits-243-blue?style=for-the-badge&logo=github" alt="Total Commits" />
+  <img src="https://img.shields.io/badge/Collaborators-4-purple?style=for-the-badge&logo=github" alt="Collaborators" />
+  <img src="https://img.shields.io/badge/Total_Visits-2175-success?style=for-the-badge&logo=google-analytics" alt="Total Visits" />
+  <img src="https://img.shields.io/badge/Active_Users-19-orange?style=for-the-badge&logo=firebase" alt="Users" />
+  <img src="https://img.shields.io/badge/Verified_Kaarigars-8-green?style=for-the-badge&logo=firebase" alt="Kaarigars" />
+</div>
+
+<br/>
+
+### 👥 Top Contributors
+
+| Collaborator | 🔨 Total Commits | 🌟 Features Added |
+| :--- | :---: | :---: |
+| **Ashutosh Kumar Singh** | 230 | 95 |
+| **Sanvi Gupta** | 11 | 5 |
+| **Shreya860** | 1 | 0 |
+| **Samya Goel** | 1 | 0 |
+
+### 📈 Website Traffic (Page Visits)
+
+| Page | Views | Popularity |
+| :--- | :---: | :--- |
+| **`RepairLink.html`** (Core Map) | **644** | 🟢🟢🟢🟢🟢🟢 |
+| **`index.html`** (Landing Page) | **502** | 🟢🟢🟢🟢🟢 |
+| **`Auth.html`** (Login/Signup) | **286** | 🟢🟢🟢 |
+| **`Admin.html`** | **243** | 🟢🟢 |
+| **`UserDashboard.html`** | **185** | 🟢 |
+| **`Pricing.html`** | **118** | 🟢 |
+| **`AboutUs.html`** | **89** | ⚪ |
+
+### 🔥 Live Firebase Stats Snapshot
+- **Registered Users:** 19 (including 3 kaarigar accounts)
+- **Verified Kaarigars:** 8 (0 pending verifications)
+- **Service Orders:** 6 (1 awaiting approval)
+- **Support Messages:** 5 (3 unread)
 
 ---
 
@@ -93,3 +140,21 @@
    ```bash
    npx firebase-tools deploy --only hosting
    ```
+
+---
+
+## 🎵 Our Theme Song
+
+We believe fixing things shouldn't be boring! RepairLink has its very own custom-produced theme song. 
+You can listen to our exclusive track on the **[About Us](https://repairlink-de1ta.web.app/AboutUs.html)** page of our live website.
+
+---
+
+## 🌐 Connect With Us
+
+Join the RepairLink community and stay updated with our mission to build a circular economy:
+
+*   [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/repairlink-official)
+*   [![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/repairlink.in/)
+*   [![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@RepairLink.handleYT)
+

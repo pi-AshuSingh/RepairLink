@@ -14,9 +14,9 @@
 <title>Contact Us - RepairLink</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=1.3">
 <style>
-  body { overflow: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+  
   .container { max-width: 500px; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(34,29,20,0.12); margin-top: 20px; }
   h1 { font-family: 'Fraunces', serif; font-size: 32px; margin-bottom: 8px; color: var(--ink); }
   p.sub { font-size: 14px; color: var(--ink-dim); margin-bottom: 24px; }
@@ -37,7 +37,7 @@
 
   /* ---------- Sidebar shell ---------- */
   body { margin: 0; padding: 0; background: var(--paper); overflow: auto; }
-  .admin-shell { display: flex; min-height: 100vh; overflow: hidden; }
+  .admin-shell { display: flex; height: 100dvh; width: 100%; overflow: hidden; }
   .sidebar {
     width: 240px; flex-shrink: 0; background: var(--paper); border-right: 1px solid var(--line);
     display: flex; flex-direction: column; padding: 24px 16px; position: relative; z-index: 100;
@@ -55,15 +55,22 @@
   
   .main-area { flex: 1; position: relative; display: flex; flex-direction: column; overflow: hidden; background: #FAF8F5; overflow-y: auto; }
   
-  @media (max-width: 860px) {
+  @media (max-width: 1024px) {
     .admin-shell { flex-direction: column; }
-    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); }
+    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow: visible; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
     .sidebar-brand { display: none; }
-    .sidebar-nav { flex-direction: row; }
+    .sidebar-nav { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 8px; }
+    .sidebar-nav a { width: auto; white-space: nowrap; flex-shrink: 0; padding: 8px 12px; justify-content: center; }
     .main-area { flex: 1; overflow-y: visible; }
   }
 
+
+  @media (max-width: 600px) {
+    .container { padding: 24px; margin: 20px 10px; width: auto; }
+    .auth-container { padding: 32px 20px; }
+  }
 </style>
+
 <link rel="icon" type="image/png" href="logo.png?v=2">
 <link rel="shortcut icon" type="image/png" href="logo.png?v=2">
 </head>
@@ -77,6 +84,10 @@
       RepairLink
     </a>
     <nav class="sidebar-nav">
+      <a href="index.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2h-4a2 2 0 01-2-2v-4a2 2 0 00-2-2h-2a2 2 0 00-2 2v4a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Return to Home
+      </a>
       <a href="RepairLink.html">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
         Map View
@@ -97,7 +108,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
         Contact
       </a>
-      <a href="Auth.html" id="navLogin" style="color: var(--marigold-dim); font-weight: 800;">
+      <a href="Auth.html" id="navLogin" style="color: #8A5C00; font-weight: 800;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
         Sign In
       </a>
@@ -109,7 +120,7 @@
   </div>
 
   <!-- MAIN AREA -->
-  <div class="main-area">
+  <div class="main-area mesh-bg" style="align-items: center; padding: 40px 20px; overflow-y: auto;">
 
 
 
@@ -200,55 +211,6 @@
 </script>
 
 
-<!-- Return to Home Draggable Button -->
-<a href="index.html" class="return-home-btn" id="returnHomeBtn" style="position:fixed; bottom:100px; left:30px; z-index:9999; display:flex; align-items:center; gap:8px; background:var(--ink, #1F1B13); color:#fff; padding:12px 20px; border-radius:99px; text-decoration:none; font-weight:700; font-family:'Manrope', sans-serif; font-size:14px; box-shadow:0 10px 30px rgba(0,0,0,0.15); cursor:grab; user-select:none; transition: transform 0.3s, box-shadow 0.3s;">
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-  <span>Return to Home</span>
-</a>
-<script>
-  (function(){
-    const btn = document.getElementById('returnHomeBtn');
-    if(!btn) return;
-    let isDragging = false, hasDragged = false, offsetX, offsetY;
-
-    const dragStart = (e) => {
-      isDragging = true;
-      hasDragged = false;
-      const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-      const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-      offsetX = clientX - btn.getBoundingClientRect().left;
-      offsetY = clientY - btn.getBoundingClientRect().top;
-      btn.style.cursor = 'grabbing';
-      btn.style.transition = 'none';
-    };
-
-    const drag = (e) => {
-      if (!isDragging) return;
-      hasDragged = true;
-      const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-      const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-      btn.style.left = (clientX - offsetX) + 'px';
-      btn.style.top = (clientY - offsetY) + 'px';
-      btn.style.bottom = 'auto';
-      btn.style.right = 'auto';
-    };
-
-    const dragEnd = (e) => {
-      if (!isDragging) return;
-      isDragging = false;
-      btn.style.cursor = 'grab';
-      btn.style.transition = 'transform 0.3s, box-shadow 0.3s';
-    };
-
-    btn.addEventListener('mousedown', dragStart);
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('mouseup', dragEnd);
-    btn.addEventListener('click', (e) => { if(hasDragged) e.preventDefault(); });
-    btn.addEventListener('touchstart', dragStart, {passive: true});
-    document.addEventListener('touchmove', drag, {passive: false});
-    document.addEventListener('touchend', dragEnd);
-  })();
-</script>
 <!-- PAGE TRACKER SCRIPT -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
@@ -267,6 +229,7 @@
 
   </div> <!-- End of .main-area -->
 </div> <!-- End of .admin-shell -->
+<script type="module" src="navAuth.js"></script>
 </body>
 
 </html>

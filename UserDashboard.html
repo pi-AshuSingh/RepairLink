@@ -14,7 +14,7 @@
 <title>My Dashboard — RepairLink</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=1.3">
 <style>
   body { overflow: auto; margin: 0; padding: 0; }
 
@@ -26,17 +26,17 @@
   }
   .sidebar-brand { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 0 8px; margin-bottom: 28px; color: var(--ink); }
   .sidebar-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
-  .sidebar-nav button {
+  .sidebar-nav button, .sidebar-nav a {
     display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: none; border: none;
     padding: 11px 12px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600;
-    color: var(--ink-dim); cursor: pointer; transition: background 0.15s, color 0.15s;
+    color: var(--ink-dim); cursor: pointer; transition: background 0.15s, color 0.15s; text-decoration: none;
   }
-  .sidebar-nav button:hover { background: var(--paper-2); color: var(--ink); }
-  .sidebar-nav button.active { background: var(--marigold-dim); color: #8A5C00; }
-  .sidebar-nav button svg { flex-shrink: 0; }
-  .sidebar-footer { display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid var(--line); }
-  .sidebar-footer a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; color: var(--ink-dim); text-decoration: none; cursor: pointer; }
-  .sidebar-footer a:hover { background: var(--paper-2); color: var(--ink); }
+  .sidebar-nav button:hover, .sidebar-nav a:hover { background: var(--paper-2); color: var(--ink); }
+  .sidebar-nav button.active, .sidebar-nav a.active { background: var(--marigold-dim); color: #8A5C00; }
+  .sidebar-nav button svg, .sidebar-nav a svg { flex-shrink: 0; }
+  
+  
+  
 
   .main-area { margin-left: 240px; flex: 1; padding: 36px 40px; max-width: 1200px; }
   .tab-content { display: none; }
@@ -45,11 +45,12 @@
   .page-head h1 { font-family: 'Fraunces', serif; font-size: 26px; margin: 0; color: var(--ink); }
   .page-head p { font-size: 13px; color: var(--ink-dim); margin-top: 4px; }
 
-  @media (max-width: 860px) {
-    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; }
+  @media (max-width: 1024px) {
+    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow: visible; padding: 12px; -webkit-overflow-scrolling: touch; }
     .sidebar-brand { display: none; }
-    .sidebar-nav { flex-direction: row; }
-    .sidebar-footer { display: none; }
+    .sidebar-nav { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 8px; }
+    .sidebar-nav button, .sidebar-nav a { width: auto; white-space: nowrap; flex-shrink: 0; }
+    
     .admin-shell { flex-direction: column; }
     .main-area { margin-left: 0; padding: 24px 16px; }
   }
@@ -111,8 +112,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Suggested Kaarigars
       </button>
-    </nav>
-    <div class="sidebar-footer">
+    
       <a href="index.html">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
         Return to Home
@@ -125,7 +125,9 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         Logout
       </a>
-    </div>
+    
+    </nav>
+    
   </div>
 
   <div class="main-area">
@@ -199,7 +201,7 @@
       <!-- Badges Section -->
       <div style="margin-bottom: 24px;">
         <h3 style="font-family:'Fraunces', serif; font-size: 18px; margin-bottom: 12px; color: var(--ink);">Your Badges</h3>
-        <div style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px;">
+        <div style="display: flex; gap: 16px; overflow: visible; padding-bottom: 8px;">
           <!-- Badge 1: Active -->
           <div style="background: white; border: 1px solid var(--leaf); padding: 12px; border-radius: 12px; text-align: center; min-width: 100px; box-shadow: 0 4px 12px rgba(31,122,68,0.1);">
             <div style="font-size: 24px; margin-bottom: 4px;">🌱</div>
@@ -363,6 +365,18 @@
 </div>
 
 <script type="module">
+  // Escapes user-typed text before it's templated into innerHTML (repair descriptions,
+  // kaarigar names, admin notes) so it can't inject markup/script into other users' pages.
+  window.escapeHtml = function(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+
   window.showToast = function(message, type = 'success') {
     let toast = document.getElementById('globalToast');
     if(!toast) {
@@ -389,7 +403,9 @@
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
-      window.location.href = 'Auth.html';
+      alert("Please login as a user to access premium features.");
+      const currentUrl = encodeURIComponent(window.location.pathname.split('/').pop() + window.location.search);
+      window.location.href = 'Auth.html?redirect=' + currentUrl;
       return;
     }
     
@@ -399,7 +415,7 @@
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists()) {
       const role = userDoc.data().role;
-      if (role === 'user' || role === 'admin') {
+      if (role === 'user') {
         document.getElementById('userContainer').style.display = 'flex';
         
         // Populate profile
@@ -420,12 +436,17 @@
         loadLiveRequests(user.uid);
         window.loadKaarigars();
         
+      } else if (role === 'admin') {
+        alert("You are an Admin. Redirecting to Admin Dashboard. But to get premium, please login as user.");
+        window.location.href = 'Admin.html';
       } else {
-        alert("You are registered as a Kaarigar. Redirecting to your dashboard.");
+        alert("You are registered as a Kaarigar. Redirecting to your dashboard. But to get premium, please login as user.");
         window.location.href = 'KaarigarDashboard.html';
       }
     } else {
-      window.location.href = 'Auth.html';
+      alert("Please login as a user to access premium features.");
+      const currentUrl = encodeURIComponent(window.location.pathname.split('/').pop() + window.location.search);
+      window.location.href = 'Auth.html?redirect=' + currentUrl;
     }
   });
 
@@ -630,6 +651,13 @@
       const snap = await getDocs(q);
       const listEl = document.getElementById('liveRequestsList');
       const recentEl = document.getElementById('recentRepairsList');
+      if (recentEl && !recentEl.dataset.rateListenerBound) {
+        recentEl.dataset.rateListenerBound = '1';
+        recentEl.addEventListener('click', (e) => {
+          const btn = e.target.closest('.rate-kaarigar-btn');
+          if (btn) openRatingModal(btn.dataset.oid, btn.dataset.kid, btn.dataset.kname);
+        });
+      }
       listEl.innerHTML = '';
       recentEl.innerHTML = '';
       
@@ -637,6 +665,7 @@
       let hasRecent = false;
       let activeCount = 0;
       let doneCount = 0;
+      let pendingRatingOrder = null; // first completed-but-unrated order found this load
       
       snap.forEach(d => {
         const o = d.data();
@@ -651,7 +680,8 @@
           doneCount++;
           let actionHtml = '';
           if (!o.rating) {
-             actionHtml = `<button onclick="openRatingModal('${oid}', '${o.kaarigarId}', '${o.kaarigarName || 'Kaarigar'}')" style="margin-top:8px; background:var(--marigold); color:var(--ink); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">★ Rate Kaarigar</button>`;
+             if (!pendingRatingOrder) pendingRatingOrder = { oid, kaarigarId: o.kaarigarId, kaarigarName: o.kaarigarName || 'Kaarigar' };
+             actionHtml = `<button class="rate-kaarigar-btn" data-oid="${escapeHtml(oid)}" data-kid="${escapeHtml(o.kaarigarId)}" data-kname="${escapeHtml(o.kaarigarName || 'Kaarigar')}" style="margin-top:8px; background:var(--marigold); color:var(--ink); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">★ Rate Kaarigar</button>`;
           } else {
              actionHtml = `<div style="margin-top:8px; font-size:12px; color:var(--ink-dim);">You rated: ${o.rating} ★</div>`;
           }
@@ -660,8 +690,8 @@
             <div class="list-item" style="flex-direction:column; align-items:stretch;">
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div class="list-info">
-                  <div class="list-title">${o.item}</div>
-                  <div class="list-meta">${o.date || 'Completed'} • ${o.kaarigarName || 'Unknown'}</div>
+                  <div class="list-title">${escapeHtml(o.item)}</div>
+                  <div class="list-meta">${o.date || 'Completed'} • ${escapeHtml(o.kaarigarName) || 'Unknown'}</div>
                 </div>
                 <span class="status-badge" style="background:var(--leaf-dim); color:#1F7A44;">Completed</span>
               </div>
@@ -675,6 +705,7 @@
         
         let statusBadge = `<span class="status-badge" style="background:#e0e0e0; color:#333;">${o.status}</span>`;
         let adminNotes = '';
+        let completeAction = '';
         
         if (o.status === 'pending_payment') {
           statusBadge = `<span class="status-badge" style="background:#FFF9C4; color:#F57F17;">Awaiting Payment Approval</span>`;
@@ -685,24 +716,49 @@
           if(o.status === 'progress') badgeText = 'Repair in Progress';
           if(o.status === 'ready') badgeText = 'Ready for Drop-off';
           statusBadge = `<span class="status-badge" style="background:#E3F2FD; color:#1565C0;">${badgeText}</span>`;
+          // Coordinates are only ever included in this block, which is skipped entirely
+          // once o.status === 'done' (see branch above) — so the moment the complaint is
+          // closed, the kaarigar's location stops being rendered to the customer.
+          let coordsLine = '';
+          if (o.kaarigarLat !== undefined && o.kaarigarLat !== null && o.kaarigarLng !== undefined && o.kaarigarLng !== null) {
+            const mapsUrl = `https://www.google.com/maps?q=${o.kaarigarLat},${o.kaarigarLng}`;
+            coordsLine = `<strong>Kaarigar Location:</strong> ${o.kaarigarLat}, ${o.kaarigarLng} — <a href="${mapsUrl}" target="_blank" rel="noopener" style="color:var(--leaf); text-decoration:underline;">View on map</a><br>`;
+          }
           adminNotes = `
             <div style="margin-top:12px; background:var(--paper-2); padding:12px; border-radius:8px; font-size:13px;">
-              <strong>Assigned:</strong> ${o.kaarigarName || 'Unknown Kaarigar'}<br>
-              <strong>Admin Note:</strong> ${o.adminComments || 'None'}<br>
+              <strong>Assigned:</strong> ${escapeHtml(o.kaarigarName) || 'Unknown Kaarigar'}<br>
+              ${coordsLine}
+              <strong>Admin Note:</strong> ${escapeHtml(o.adminComments) || 'None'}<br>
             </div>
           `;
+
+          if (o.kaarigarId) {
+            // Nudge: if it's been sitting active for 2+ days, don't just wait for the user
+            // to remember — ask them directly, since we have no reliable kaarigar-side signal.
+            const lastTouched = (o.statusUpdatedAt || o.assignedAt)?.toDate ? (o.statusUpdatedAt || o.assignedAt).toDate() : null;
+            const daysStale = lastTouched ? Math.floor((Date.now() - lastTouched.getTime()) / 86400000) : null;
+            const isStale = daysStale !== null && daysStale >= 2;
+
+            completeAction = `
+              <div style="margin-top:12px; ${isStale ? 'background:var(--marigold-dim); border:1px solid var(--marigold); border-radius:8px; padding:12px;' : ''}">
+                ${isStale ? `<div style="font-size:13px; font-weight:700; color:#8A5C00; margin-bottom:8px;">Has your ${escapeHtml(o.item)} been repaired? Let us know so we can close this out.</div>` : ''}
+                <button onclick="markOrderCompleted('${oid}')" style="background:var(--leaf); color:#fff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12.5px;">✓ Mark as Completed</button>
+              </div>
+            `;
+          }
         }
         
         listEl.innerHTML += `
           <div class="list-item" style="flex-direction:column; align-items:stretch;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <div class="list-info">
-                <div class="list-title">${o.item}</div>
+                <div class="list-title">${escapeHtml(o.item)}</div>
                 <div class="list-meta">${o.date || 'Today'}</div>
               </div>
               ${statusBadge}
             </div>
             ${adminNotes}
+            ${completeAction}
           </div>
         `;
       });
@@ -715,6 +771,16 @@
             <p>You don't have any repairs in progress. Need something fixed? Request a service above!</p>
           </div>
         `;
+      }
+
+      // Uber-style prompt: if a completed repair is still unrated, surface it automatically
+      // rather than waiting for the user to notice the "Rate Kaarigar" button on their own.
+      if (pendingRatingOrder && !window.__ratingPromptShown) {
+        window.__ratingPromptShown = true;
+        const modalOpen = document.getElementById('ratingModal')?.style.display === 'flex';
+        if (!modalOpen) {
+          openRatingModal(pendingRatingOrder.oid, pendingRatingOrder.kaarigarId, pendingRatingOrder.kaarigarName);
+        }
       }
       if (!hasRecent) {
         recentEl.innerHTML = `
@@ -899,6 +965,22 @@
     }
   });
 
+  window.markOrderCompleted = async function(orderId) {
+    if (!confirm("Confirm this repair has been completed? You'll be asked to rate your kaarigar next.")) return;
+    try {
+      await updateDoc(doc(db, "orders", orderId), {
+        status: 'done',
+        completedAt: new Date(),
+        completedBy: 'customer'
+      });
+      showToast("Marked as completed. Thank you!");
+      window.__ratingPromptShown = false; // allow the rating prompt to fire for this newly-completed order
+      loadLiveRequests(auth.currentUser.uid);
+    } catch (err) {
+      showToast("Error updating request: " + err.message, 'error');
+    }
+  };
+
   // Rating Modal Logic
   window.openRatingModal = function(orderId, kaarigarId, kaarigarName) {
     document.getElementById('ratingOrderId').value = orderId;
@@ -1017,6 +1099,13 @@
       document.getElementById('tab-' + tabId).classList.add('active');
     });
   });
+
+  // Auto-switch tab based on URL param
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab');
+  if (tabParam) {
+    switchTab(tabParam);
+  }
 </script>
 
   <!-- Eco-Impact Info Modal -->

@@ -19,7 +19,7 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     windowCurrentUser = user;
     if(navLogin) navLogin.style.display = 'none';
-    if(navLogout) navLogout.style.display = 'inline-block';
+    if(navLogout) navLogout.style.display = 'flex';
     
     // Check role and inject links
     try {
@@ -246,6 +246,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // Escapes live Firestore kaarigar data (name, area, etc.) before it's templated into
+  // innerHTML/Leaflet popups. This data is visible and editable to any authenticated
+  // kaarigar account, and is rendered to every site visitor pre-auth — without this,
+  // a malicious "area" or "name" field would execute as script for anyone who loads the map.
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function t18n(key) {
     return (translations[currentLang] && translations[currentLang][key]) || translations['en'][key] || key;
   }
@@ -434,13 +448,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentArtisanIdx = null;
 
   function showStory(a, idx){
-    const isAdmin = (window.windowUserRole === 'admin');
-    
-    if (!isAdmin) {
-      alert("After your request to the service, if it gets verified after payment then you can see the details, not before that.");
-      return;
-    }
-
     storyView.style.display = 'block';
     resultsView.style.display = 'none';
     currentArtisan = a;
@@ -453,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
     badge.classList.toggle('pending', !td.verified);
     document.getElementById('verifyBadgeText').textContent = td.verified ? t18n('verifiedText') : t18n('pendingText');
     const tag = document.getElementById('tradeTag');
-    tag.innerHTML = `<svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${tradeLabel(a.trade)} · ${a.area}`;
+    tag.innerHTML = `<svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${tradeLabel(a.trade)} · ${escapeHtml(a.area)}`;
     tag.style.background = t.dim;
     tag.style.color = t.color;
     document.getElementById('starsRow').innerHTML = starsSvg(td.rating);
@@ -478,37 +485,56 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="review-top"><span class="review-name">${r.n}</span><span class="stars">${starsSvg(td.rating)}</span></div>
         <div class="review-text">${r.t}</div>
       </div>`).join('');
+    const proximityBar = document.querySelector('.proximity-bar');
     const whatsappPanel = document.getElementById('whatsappPanel');
-    whatsappPanel.target = "_blank";
-    whatsappPanel.rel = "noopener";
-    whatsappPanel.href = `https://wa.me/${a.phone}?text=${encodeURIComponent('Hi ' + a.name + ', I found you on RepairLink and would like help with a repair.')}`;
-    whatsappPanel.onclick = null;
+    const isAdmin = (window.windowUserRole === 'admin');
+    
+    if (!isAdmin) {
+      whatsappPanel.style.filter = 'blur(5px)';
+      whatsappPanel.style.opacity = '0.6';
+      whatsappPanel.style.pointerEvents = 'none';
+      whatsappPanel.style.userSelect = 'none';
+      whatsappPanel.href = '#';
+      whatsappPanel.onclick = (e) => { e.preventDefault(); };
+    } else {
+      whatsappPanel.style.filter = 'none';
+      whatsappPanel.style.opacity = '1';
+      whatsappPanel.style.pointerEvents = 'auto';
+      whatsappPanel.style.userSelect = 'auto';
+      whatsappPanel.target = "_blank";
+      whatsappPanel.rel = "noopener";
+      whatsappPanel.href = `https://wa.me/${a.phone}?text=${encodeURIComponent('Hi ' + a.name + ', I found you on RepairLink and would like help with a repair.')}`;
+      whatsappPanel.onclick = null;
+    }
 
     // Action button updates using the safe t18n helper
     const doneBtn = document.getElementById('markDoneBtn');
     const reportBtn = document.getElementById('reportBtn');
     doneBtn.disabled = false; reportBtn.disabled = false;
-    doneBtn.classList.remove('confirmed'); reportBtn.classList.remove('confirmed');
-    doneBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg><span data-i18n="markDone">' + t18n('markDone') + '</span>';
-    reportBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><span data-i18n="reportIssue">' + t18n('reportIssue') + '</span>';
 
     openPanel();
   }
 
-  function popupHtml(a){
-    return `<b>${a.name}</b>${isVerified(a) ? ` <span style="color:#1F7A44">✓ ${t18n('verifiedText')}</span>` : ''}<br>${tradeLabel(a.trade)} · ${a.area}<br><span style="opacity:.7">${t18n('clickForStory')}</span>`;
+  window.openStory = function(idx) {
+    if (ARTISANS[idx]) {
+      showStory(ARTISANS[idx], idx);
+    }
+  };
+
+  function popupHtml(a, idx){
+    return `<div onclick="window.openStory(${idx})" style="cursor:pointer; display:block;"><b>${escapeHtml(a.name)}</b>${isVerified(a) ? ` <span style="color:#1F7A44">✓ ${t18n('verifiedText')}</span>` : ''}<br>${tradeLabel(a.trade)} · ${escapeHtml(a.area)}<br><span style="opacity:.8; color:var(--primary, #007aff); font-weight:600; display:inline-block; margin-top:4px;">${t18n('clickForStory')}</span></div>`;
   }
 
   const markers = [];
   ARTISANS.forEach((a, idx) => {
     const marker = L.marker([a.lat, a.lng], { icon: buildIcon(a.trade, false, isVerified(a)) }).addTo(map);
-    marker.bindPopup(popupHtml(a));
+    marker.bindPopup(popupHtml(a, idx));
     marker.on('click', () => showStory(a, idx));
     markers.push(marker);
   });
 
   function refreshMarkerPopups(){
-    markers.forEach((m, i) => m.setPopupContent(popupHtml(ARTISANS[i])));
+    markers.forEach((m, i) => m.setPopupContent(popupHtml(ARTISANS[i], i)));
   }
 
   function resetHighlights(){ markers.forEach((m, i) => m.setIcon(buildIcon(ARTISANS[i].trade, false, isVerified(ARTISANS[i])))); }
@@ -543,13 +569,13 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'result-card';
       card.innerHTML = `
         <div class="result-top">
-          <div class="result-name">${info.artisan.name}</div>
+          <div class="result-name">${escapeHtml(info.artisan.name)}</div>
           <div class="result-dist">${formatDistance(info.dist)} ${t18n('awayLabel')}</div>
         </div>
         <div class="result-trade" style="background:${t.dim}; color:${t.color}">
           <svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${tradeLabel(trade)}
         </div>
-        <div class="result-area">${info.artisan.area}</div>`;
+        <div class="result-area">${escapeHtml(info.artisan.area)}</div>`;
       card.addEventListener('click', () => showStory(info.artisan, info.idx));
       list.appendChild(card);
       markers[info.idx].setIcon(buildIcon(trade, true, isVerified(info.artisan)));
@@ -570,26 +596,32 @@ document.addEventListener('DOMContentLoaded', () => {
     map.flyTo([loc.lat, loc.lng], 14, { duration: 0.9 });
   });
 
-  document.getElementById('heroClose').addEventListener('click', () => {
-    document.getElementById('heroScrim').classList.add('closed');
-    const returnBtn = document.getElementById('returnHomeBtn');
-    const premiumBox = document.querySelector('.premium-float');
-    if(returnBtn) returnBtn.style.display = 'flex';
-    if(premiumBox) premiumBox.style.display = 'flex';
-  });
+  const heroClose = document.getElementById('heroClose');
+  if (heroClose) {
+    heroClose.addEventListener('click', () => {
+      document.getElementById('heroScrim').classList.add('closed');
+      const returnBtn = document.getElementById('returnHomeBtn');
+      const premiumBox = document.querySelector('.premium-float');
+      if(returnBtn) returnBtn.style.display = 'flex';
+      if(premiumBox) premiumBox.style.display = 'flex';
+    });
+  }
 
   // ---------- Role Selector & Onboarding Logic ----------
   const roleScrim = document.getElementById('roleScrim');
   const roleCustomer = document.getElementById('roleCustomer');
   const roleArtisan = document.getElementById('roleArtisan');
 
-  roleCustomer.addEventListener('click', () => {
-    roleScrim.classList.add('closed');
-  });
-
-  roleArtisan.addEventListener('click', () => {
-    window.location.href = 'Auth.html';
-  });
+  if (roleCustomer) {
+    roleCustomer.addEventListener('click', () => {
+      roleScrim.classList.add('closed');
+    });
+  }
+  if (roleArtisan) {
+    roleArtisan.addEventListener('click', () => {
+      window.location.href = 'Auth.html';
+    });
+  }
 
   // Toast logic
   function showToast(msg) {
@@ -710,7 +742,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const snapshot = await getDocs(kaarigarsCol);
       const fetchedData = [];
       snapshot.forEach(docSnap => {
-        fetchedData.push({ id: docSnap.id, ...docSnap.data() });
+        const d = docSnap.data();
+        // Public site only ever gets the rounded, privacy-safe coordinate. approxLat/Lng is
+        // the post-migration field; lat/lng is a fallback for any not-yet-migrated docs so
+        // the map doesn't silently break mid-rollout — exact coordinates never reach this file.
+        const lat = d.approxLat ?? d.lat;
+        const lng = d.approxLng ?? d.lng;
+        fetchedData.push({ id: docSnap.id, ...d, lat, lng });
       });
       ARTISANS = fetchedData;
       console.log(`Loaded ${ARTISANS.length} kaarigars from Firestore.`);

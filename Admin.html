@@ -14,7 +14,7 @@
 <title>Admin Dashboard — RepairLink</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=1.3">
 <style>
   body { overflow: auto; }
 
@@ -26,18 +26,18 @@
   }
   .sidebar-brand { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 0 8px; margin-bottom: 28px; color: var(--ink); }
   .sidebar-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
-  .sidebar-nav button {
+  .sidebar-nav button, .sidebar-nav a {
     display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: none; border: none;
     padding: 11px 12px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600;
-    color: var(--ink-dim); cursor: pointer; transition: background 0.15s, color 0.15s;
+    color: var(--ink-dim); cursor: pointer; transition: background 0.15s, color 0.15s; text-decoration: none;
   }
-  .sidebar-nav button:hover { background: var(--paper-2); color: var(--ink); }
-  .sidebar-nav button.active { background: var(--marigold-dim); color: #8A5C00; }
-  .sidebar-nav button svg { flex-shrink: 0; }
+  .sidebar-nav button:hover, .sidebar-nav a:hover { background: var(--paper-2); color: var(--ink); }
+  .sidebar-nav button.active, .sidebar-nav a.active { background: var(--marigold-dim); color: #8A5C00; }
+  .sidebar-nav button svg, .sidebar-nav a svg { flex-shrink: 0; }
   .sidebar-nav .nav-badge { margin-left: auto; background: var(--vermilion-dim); color: #B23A2B; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 999px; font-family: 'JetBrains Mono', monospace; }
-  .sidebar-footer { display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid var(--line); }
-  .sidebar-footer a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; color: var(--ink-dim); text-decoration: none; }
-  .sidebar-footer a:hover { background: var(--paper-2); color: var(--ink); }
+  
+  
+  
 
   .main-area { margin-left: 240px; flex: 1; padding: 36px 40px; max-width: 1200px; }
   .tab-content { display: none; }
@@ -94,11 +94,12 @@
   .field-group textarea { resize: vertical; min-height: 60px; }
   .form-submit { background: var(--marigold); color: #2A1E00; border: none; padding: 12px 24px; border-radius: 999px; font-weight: 700; font-family: 'Manrope', sans-serif; font-size: 14px; cursor: pointer; }
 
-  @media (max-width: 860px) {
-    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; }
+  @media (max-width: 1024px) {
+    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow: visible; padding: 12px; -webkit-overflow-scrolling: touch; }
     .sidebar-brand { display: none; }
-    .sidebar-nav { flex-direction: row; }
-    .sidebar-footer { display: none; }
+    .sidebar-nav { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 8px; }
+    .sidebar-nav button, .sidebar-nav a { width: auto; white-space: nowrap; flex-shrink: 0; }
+    
     .admin-shell { flex-direction: column; }
     .main-area { margin-left: 0; padding: 24px 16px; }
   }
@@ -142,8 +143,7 @@
         Premium Approvals
         <span class="nav-badge" id="pendingPremiumBadge" style="display:none;">0</span>
       </button>
-    </nav>
-    <div class="sidebar-footer">
+    
       <a href="index.html">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
         Return to Home
@@ -152,7 +152,9 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         Back to Map
       </a>
-    </div>
+    
+    </nav>
+    
   </div>
 
   <div class="main-area">
@@ -208,6 +210,7 @@
       </div>
       <div class="toolbar">
         <input type="text" class="search-input" id="kaarigarSearchInput" placeholder="Search by name, trade, or area…">
+        <button class="btn-small ghost" onclick="runContactMigration()" title="One-time: moves phone/gmail/exact lat-lng off the public kaarigars doc into a private subcollection">Run Privacy Migration</button>
       </div>
       <div class="panel-block" style="padding:0; overflow-x:auto;">
         <table>
@@ -262,8 +265,8 @@
       <div class="page-head"><div><h1>Service Requests</h1><p>Live repair bookings coming through the platform.</p></div></div>
       <div class="panel-block" style="padding:0; overflow-x:auto;">
         <table>
-          <thead><tr><th>Item</th><th>Customer UID</th><th>Kaarigar Name</th><th>Status</th><th>Actions / Photos</th></tr></thead>
-          <tbody id="ordersTableBody"><tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
+          <thead><tr><th>Item</th><th>Customer UID</th><th>Address</th><th>Kaarigar Name</th><th>Status</th><th>Actions / Photos</th></tr></thead>
+          <tbody id="ordersTableBody"><tr><td colspan="6" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -294,23 +297,44 @@
   <div class="modal-container">
     <button class="modal-close" onclick="document.getElementById('assignModal').style.display='none'">&times;</button>
     <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px;">Approve Payment & Assign</h2>
-    <p style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Verify the ₹9 payment and assign a Kaarigar to this request.</p>
+    <p style="color:var(--ink-dim); font-size:14px; margin-bottom:16px;">Verify the ₹9 payment and assign a Kaarigar to this request.</p>
+    <div class="field-group" style="margin-bottom:16px;">
+      <label>Customer Address</label>
+      <div id="assignOrderAddress" style="padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper-2); font-size:13.5px; color:var(--ink);">—</div>
+    </div>
     <input type="hidden" id="assignOrderId">
     <div class="field-group" style="margin-bottom:16px;">
       <label>Select Kaarigar</label>
-      <select id="assignKaarigarSelect" style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px;">
+      <select id="assignKaarigarSelect" onchange="updateAssignKaarigarCoords()" style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px;">
         <option value="">Loading Kaarigars...</option>
       </select>
     </div>
+    <div class="field-group" style="margin-bottom:16px;">
+      <label>Kaarigar Coordinates (Auto-filled, sent to user)</label>
+      <div id="assignKaarigarCoords" style="padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper-2); font-size:13.5px; color:var(--ink-dim); font-family:'JetBrains Mono', monospace;">Select a kaarigar to pull their coordinates</div>
+    </div>
     <div class="field-group" style="margin-bottom:24px;">
-      <label>Admin Note / Location Coordinates (Sent to User)</label>
-      <textarea id="assignComments" placeholder="e.g. Assigned to Raju. Location: 28.6139, 77.2090" style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px; min-height:80px;"></textarea>
+      <label>Admin Note (Optional, sent to user)</label>
+      <textarea id="assignComments" placeholder="e.g. Assigned to Raju, will reach within the hour." style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px; min-height:70px;"></textarea>
     </div>
     <button class="form-submit" id="confirmAssignBtn" onclick="submitAssignment()" style="width:100%;">Approve & Assign</button>
   </div>
 </div>
 
 <script type="module">
+  // Escapes any user-typed text before it's templated into innerHTML, so a submitted
+  // contact-form message / repair description / review can't execute as script inside
+  // this authenticated admin session (stored XSS -> full admin session compromise).
+  window.escapeHtml = function(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+
   window.showToast = function(message, type = 'success') {
     let toast = document.getElementById('globalToast');
     if(!toast) {
@@ -327,7 +351,7 @@
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteField, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   import { firebaseConfig } from './env.js';
 
@@ -374,17 +398,24 @@
     let sortedStats = [];
     try {
       const statsDoc = await getDoc(doc(db, 'stats', 'page_visits'));
-      const allPages = ['index.html', 'AboutUs.html', 'Contact.html', 'Pricing.html', 'RepairLink.html', 'Auth.html', 'UserDashboard.html', 'KaarigarDashboard.html', 'Admin.html', 'Addkaarigar.html', 'Dashboard.html'];
+      const allPages = ['index.html', 'AboutUs.html', 'Contact.html', 'Pricing.html', 'RepairLink.html', 'Auth.html', 'UserDashboard.html', 'KaarigarDashboard.html', 'Admin.html', 'Addkaarigar.html'];
       let mergedStats = {};
-      allPages.forEach(p => mergedStats[p] = 0);
+      
       if (statsDoc.exists()) {
         const statsData = statsDoc.data();
+        // First add all dynamically discovered pages
         for (const [p, c] of Object.entries(statsData)) {
+          if (p === 'Dashboard.html') continue; // Skip non-existent page
           let key = p;
           if (key === 'AddKaarigar.html') key = 'Addkaarigar.html';
           mergedStats[key] = (mergedStats[key] || 0) + c;
         }
       }
+      
+      // Ensure default pages exist even with 0 visits
+      allPages.forEach(p => {
+        if (mergedStats[p] === undefined) mergedStats[p] = 0;
+      });
       sortedStats = Object.entries(mergedStats).sort((a, b) => b[1] - a[1]);
       let maxVisits = sortedStats.length > 0 ? sortedStats[0][1] : 1;
       let html = '';
@@ -430,7 +461,7 @@
       window.adminOrdersData = {};
       ordersBody.innerHTML = '';
       if (ordersSnap.empty) {
-        ordersBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No orders found.</td></tr>`;
+        ordersBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No orders found.</td></tr>`;
       }
       ordersSnap.forEach(d => {
         const o = d.data();
@@ -443,19 +474,37 @@
             ? `<span class="badge" style="background:#E3F2FD; color:#1565C0;">Assigned</span>` 
             : `<span class="badge" style="background:#FFF9C4; color:#F57F17;">Pending Assignment</span>`;
         }
+        if (o.status === 'progress') statusBadge = `<span class="badge" style="background:#E3F2FD; color:#1565C0;">In Progress</span>`;
+        if (o.status === 'ready') statusBadge = `<span class="badge" style="background:#E3F2FD; color:#1565C0;">Ready for Drop-off</span>`;
         if (o.status === 'done') statusBadge = `<span class="badge" style="background:var(--leaf-dim); color:#1F7A44;">Done</span>`;
+
+        // Flag orders stuck active for 2+ days with no update — likely forgotten, needs a manual check-in call
+        const lastTouched = (o.statusUpdatedAt || o.assignedAt)?.toDate ? (o.statusUpdatedAt || o.assignedAt).toDate() : null;
+        const daysStale = lastTouched ? Math.floor((Date.now() - lastTouched.getTime()) / 86400000) : null;
+        const isStale = ['pending', 'progress', 'ready'].includes(o.status) && o.kaarigarId && daysStale !== null && daysStale >= 2;
+        if (isStale) statusBadge += `<div style="margin-top:4px;"><span class="badge" style="background:#FFEBEE; color:#C62828; font-size:10px;">⚠ No update in ${daysStale}d — call to check</span></div>`;
 
         let actionHtml = '';
         if (!o.kaarigarId && (o.status === 'pending_payment' || o.status === 'pending')) {
           actionHtml = `<button class="btn-small marigold" onclick="openAssignModal('${oid}', '${o.trade}')">Assign Kaarigar</button>`;
-        } else if (o.kaarigarId && o.status === 'pending') {
+        } else if (o.kaarigarId && ['pending', 'progress', 'ready'].includes(o.status)) {
           const isFree = o.paymentAmount === 0;
           let revokePhotos = '';
           if (o.beforePhotoUrl) revokePhotos += `<a href="${o.beforePhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">Before Photo</a>`;
           if (o.afterPhotoUrl) revokePhotos += `<a href="${o.afterPhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">After Photo</a>`;
-          
+
+          const statusOptions = [
+            { v: 'pending', l: 'Assigned' },
+            { v: 'progress', l: 'In Progress' },
+            { v: 'ready', l: 'Ready for Drop-off' },
+            { v: 'done', l: 'Mark Completed' },
+          ].map(s => `<option value="${s.v}" ${o.status === s.v ? 'selected' : ''}>${s.l}</option>`).join('');
+
           actionHtml = `
             ${revokePhotos}
+            <select onchange="updateOrderStatus('${oid}', this.value)" style="font-size:12px; padding:4px 6px; border-radius:6px; border:1px solid var(--line); margin-top:4px; font-family:'Manrope',sans-serif;">
+              ${statusOptions}
+            </select>
             <button class="btn-small danger" onclick="revokeAssignment('${oid}', ${isFree})" style="margin-top:4px;">Revoke Kaarigar</button>
           `;
         } else {
@@ -465,15 +514,16 @@
         }
 
         ordersBody.innerHTML += `<tr>
-          <td style="font-weight:600">${o.item || 'N/A'}</td>
+          <td style="font-weight:600">${escapeHtml(o.item) || 'N/A'}</td>
           <td style="font-family:'JetBrains Mono', monospace; font-size:11px;">${o.customerId || 'N/A'}</td>
-          <td>${o.kaarigarName || o.kaarigarId || 'Unassigned'}</td>
+          <td style="max-width:220px; font-size:13px;">${escapeHtml(o.address) || '<span style="color:var(--ink-dim)">Not provided</span>'}</td>
+          <td>${escapeHtml(o.kaarigarName) || o.kaarigarId || 'Unassigned'}</td>
           <td>${statusBadge}</td>
           <td>${actionHtml}</td>
         </tr>`;
       });
     } catch (err) {
-      ordersBody.innerHTML = `<tr><td colspan="5">Error loading orders: ${err.message}</td></tr>`;
+      ordersBody.innerHTML = `<tr><td colspan="6">Error loading orders: ${err.message}</td></tr>`;
     }
 
     // ---- Messages ----
@@ -498,9 +548,9 @@
                <button class="btn-small marigold" onclick="markMessageResolved('${id}')">Mark Resolved</button>`;
           let dateStr = m.createdAt ? new Date(m.createdAt.seconds * 1000).toLocaleString() : 'Unknown';
           messagesBody.innerHTML += `<tr style="${isResolved ? 'opacity:0.6;' : 'font-weight:500;'}">
-            <td>${m.name || 'Unknown'}</td>
-            <td>${m.contactInfo || '-'}</td>
-            <td style="max-width:300px; word-wrap:break-word; white-space:pre-wrap;">${m.message || ''}</td>
+            <td>${escapeHtml(m.name) || 'Unknown'}</td>
+            <td>${escapeHtml(m.contactInfo) || '-'}</td>
+            <td style="max-width:300px; word-wrap:break-word; white-space:pre-wrap;">${escapeHtml(m.message) || ''}</td>
             <td>${dateStr}</td>
             <td>${actionHtml}</td>
           </tr>`;
@@ -522,20 +572,42 @@
     const verifiedCount = kaarigars.filter(k => k.verified).length;
     const pendingCount = kaarigars.length - verifiedCount;
     const pendingPayment = orders.filter(o => o.status === 'pending_payment').length;
-    const totalRevenue = orders.reduce((sum, o) => {
+    
+    const premiumUsersCount = users.filter(u => u.isPremium === true).length;
+    const premiumRevenue = premiumUsersCount * 39;
+    
+    const serviceRevenue = orders.reduce((sum, o) => {
       // count revenue if it's paid (pending, progress, ready, done)
       if (o.status !== 'pending_payment') {
         return sum + (Number(o.paymentAmount) || 0);
       }
       return sum;
     }, 0);
+    
+    const totalRevenue = premiumRevenue + serviceRevenue;
     const topPage = sortedStats && sortedStats.length ? sortedStats[0] : null;
+
+    const completedOrders = orders.filter(o => o.status === 'done');
+    const ratedOrders = completedOrders.filter(o => o.rating);
+    const avgRating = ratedOrders.length
+      ? (ratedOrders.reduce((s, o) => s + Number(o.rating || 0), 0) / ratedOrders.length).toFixed(1)
+      : null;
 
     document.getElementById('overviewCards').innerHTML = `
       <div class="stat-card">
         <div class="stat-label">Total Revenue</div>
         <div class="stat-num">₹${totalRevenue}</div>
-        <div class="stat-sub">From all paid orders</div>
+        <div class="stat-sub">Premium (₹${premiumRevenue}) + Services (₹${serviceRevenue})</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Successful Services</div>
+        <div class="stat-num">${completedOrders.length}</div>
+        <div class="stat-sub">${avgRating ? avgRating + ' ★ avg (' + ratedOrders.length + ' rated)' : 'No ratings yet'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Premium Users</div>
+        <div class="stat-num">${premiumUsersCount}</div>
+        <div class="stat-sub">Active subscriptions (₹39/each)</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Kaarigars</div>
@@ -733,25 +805,69 @@
 
   window.openAssignModal = function(orderId, trade) {
     document.getElementById('assignOrderId').value = orderId;
+    const order = (window.adminOrdersData || {})[orderId] || {};
+    document.getElementById('assignOrderAddress').textContent = order.address || 'Not provided';
     const select = document.getElementById('assignKaarigarSelect');
     select.innerHTML = '<option value="">Select a Kaarigar...</option>';
     for (const [id, k] of Object.entries(window.adminKaarigarsData)) {
       if (k.verified) select.innerHTML += `<option value="${id}">${k.name} (${k.trade} - ${k.area})</option>`;
     }
     document.getElementById('assignComments').value = '';
+    document.getElementById('assignKaarigarCoords').textContent = 'Select a kaarigar to pull their coordinates';
+    document.getElementById('assignKaarigarCoords').removeAttribute('data-lat');
+    document.getElementById('assignKaarigarCoords').removeAttribute('data-lng');
     document.getElementById('assignModal').style.display = 'flex';
+  };
+
+  // Auto-pulls the selected kaarigar's saved exact coordinates from their private/contact
+  // subdoc (admin-only read) so the admin never has to type coordinates by hand — this is
+  // what gets copied onto the order and shown to the customer once assigned.
+  window.updateAssignKaarigarCoords = async function() {
+    const kaarigarId = document.getElementById('assignKaarigarSelect').value;
+    const coordsEl = document.getElementById('assignKaarigarCoords');
+    if (!kaarigarId) {
+      coordsEl.textContent = 'Select a kaarigar to pull their coordinates';
+      coordsEl.removeAttribute('data-lat');
+      coordsEl.removeAttribute('data-lng');
+      return;
+    }
+    coordsEl.textContent = 'Loading…';
+    coordsEl.removeAttribute('data-lat');
+    coordsEl.removeAttribute('data-lng');
+    try {
+      const contactSnap = await getDoc(doc(db, 'kaarigars', kaarigarId, 'private', 'contact'));
+      const contact = contactSnap.exists() ? contactSnap.data() : {};
+      if (contact.lat !== undefined && contact.lng !== undefined && contact.lat !== null && contact.lng !== null) {
+        coordsEl.textContent = `${contact.lat}, ${contact.lng}`;
+        coordsEl.dataset.lat = contact.lat;
+        coordsEl.dataset.lng = contact.lng;
+      } else {
+        coordsEl.textContent = 'No saved coordinates for this kaarigar';
+      }
+    } catch (err) {
+      coordsEl.textContent = 'Error loading coordinates: ' + err.message;
+    }
   };
 
   window.submitAssignment = async function() {
     const orderId = document.getElementById('assignOrderId').value;
     const kaarigarId = document.getElementById('assignKaarigarSelect').value;
     const comments = document.getElementById('assignComments').value;
+    const coordsEl = document.getElementById('assignKaarigarCoords');
     const btn = document.getElementById('confirmAssignBtn');
     if (!kaarigarId) { showToast("Please select a Kaarigar.", 'error'); return; }
     btn.textContent = 'Assigning...'; btn.disabled = true;
     try {
       const kData = window.adminKaarigarsData[kaarigarId];
-      await updateDoc(doc(db, 'orders', orderId), { status: 'pending', kaarigarId, kaarigarName: kData.name, adminComments: comments });
+      const updates = { status: 'pending', kaarigarId, kaarigarName: kData.name, adminComments: comments, assignedAt: new Date() };
+      if (coordsEl.dataset.lat !== undefined && coordsEl.dataset.lng !== undefined) {
+        updates.kaarigarLat = parseFloat(coordsEl.dataset.lat);
+        updates.kaarigarLng = parseFloat(coordsEl.dataset.lng);
+      } else {
+        updates.kaarigarLat = null;
+        updates.kaarigarLng = null;
+      }
+      await updateDoc(doc(db, 'orders', orderId), updates);
       showToast("Kaarigar assigned successfully!");
       document.getElementById('assignModal').style.display = 'none';
       loadData();
@@ -759,6 +875,22 @@
       showToast("Error assigning kaarigar: " + err.message, 'error');
     } finally {
       btn.textContent = 'Approve & Assign'; btn.disabled = false;
+    }
+  };
+
+  window.updateOrderStatus = async function(orderId, newStatus) {
+    if (newStatus === 'done' && !confirm("Mark this service as completed? The customer will be prompted to leave a rating.")) {
+      loadData(); // revert the dropdown visually
+      return;
+    }
+    try {
+      const updates = { status: newStatus, statusUpdatedAt: new Date() };
+      if (newStatus === 'done') updates.completedAt = new Date();
+      await updateDoc(doc(db, 'orders', orderId), updates);
+      showToast(newStatus === 'done' ? "Marked as completed!" : "Status updated.");
+      loadData();
+    } catch (err) {
+      showToast("Error updating status: " + err.message, 'error');
     }
   };
 
@@ -770,7 +902,9 @@
         status: newStatus,
         kaarigarId: null,
         kaarigarName: null,
-        adminComments: null
+        adminComments: null,
+        kaarigarLat: null,
+        kaarigarLng: null
       });
       showToast("Assignment revoked.");
       loadData();
@@ -848,40 +982,66 @@
   };
 
   // ---------- Kaarigar details / edit ----------
-  window.showKaarigarDetails = function(id) {
+  // Phone, Gmail, and exact lat/lng live in kaarigars/{id}/private/contact — a subcollection
+  // only admin (and the kaarigar's own account) can read, per firestore.rules. The public
+  // kaarigars/{id} doc only ever holds approxLat/approxLng (rounded, ~1km fuzz) for the map.
+  window.showKaarigarDetails = async function(id) {
     const k = window.adminKaarigarsData[id];
     document.getElementById('modalTitle').textContent = "Kaarigar Details";
-    let contentHtml = '';
-    const keys = Object.keys(k).sort();
+    let contentHtml = '<div class="detail-row"><div class="detail-label">Loading contact info…</div></div>';
+    document.getElementById('modalContent').innerHTML = contentHtml;
+    document.getElementById('detailsModal').style.display = 'flex';
+
+    let contact = {};
+    try {
+      const contactSnap = await getDoc(doc(db, 'kaarigars', id, 'private', 'contact'));
+      if (contactSnap.exists()) contact = contactSnap.data();
+    } catch (err) {
+      contentHtml = `<div class="detail-row"><div class="detail-label">Contact Info</div><div class="detail-value">Error loading: ${escapeHtml(err.message)}</div></div>`;
+    }
+
+    contentHtml = '';
+    const merged = { ...k, ...contact };
+    const keys = Object.keys(merged).sort();
     for (const key of keys) {
-      let val = k[key];
+      let val = merged[key];
       if (typeof val === 'object') val = JSON.stringify(val);
-      contentHtml += `<div class="detail-row"><div class="detail-label">${key}</div><div class="detail-value">${val}</div></div>`;
+      contentHtml += `<div class="detail-row"><div class="detail-label">${escapeHtml(key)}</div><div class="detail-value">${escapeHtml(val)}</div></div>`;
     }
     contentHtml += `<div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 8px;">
       <button class="btn-small marigold" onclick="editKaarigarDetails('${id}')">Edit Details</button>
     </div>`;
     document.getElementById('modalContent').innerHTML = contentHtml;
-    document.getElementById('detailsModal').style.display = 'flex';
   };
 
-  window.editKaarigarDetails = function(id) {
+  window.editKaarigarDetails = async function(id) {
     const k = window.adminKaarigarsData[id];
     document.getElementById('modalTitle').textContent = "Edit Kaarigar Details";
+    document.getElementById('modalContent').innerHTML = `<div class="field-group"><label>Loading…</label></div>`;
+
+    let contact = {};
+    try {
+      const contactSnap = await getDoc(doc(db, 'kaarigars', id, 'private', 'contact'));
+      if (contactSnap.exists()) contact = contactSnap.data();
+    } catch (err) {
+      showToast("Error loading contact info: " + err.message, 'error');
+    }
+
     document.getElementById('modalContent').innerHTML = `
-      <div class="field-group"><label>Name</label><input type="text" id="editKName" value="${k.name || ''}"></div>
-      <div class="field-group"><label>Google Email (Optional)</label><input type="email" id="editKGmail" value="${k.gmail || ''}"></div>
-      <div class="field-group"><label>Trade</label><input type="text" id="editKTrade" value="${k.trade || ''}"></div>
-      <div class="field-group"><label>Area</label><input type="text" id="editKArea" value="${k.area || ''}"></div>
-      <div class="field-group"><label>Phone / WhatsApp number</label><input type="tel" id="editKPhone" value="${k.phone || ''}"></div>
+      <div class="field-group"><label>Name</label><input type="text" id="editKName" value="${escapeHtml(k.name || '')}"></div>
+      <div class="field-group"><label>Google Email (Optional)</label><input type="email" id="editKGmail" value="${escapeHtml(contact.gmail || '')}"></div>
+      <div class="field-group"><label>Trade</label><input type="text" id="editKTrade" value="${escapeHtml(k.trade || '')}"></div>
+      <div class="field-group"><label>Area</label><input type="text" id="editKArea" value="${escapeHtml(k.area || '')}"></div>
+      <div class="field-group"><label>Phone / WhatsApp number</label><input type="tel" id="editKPhone" value="${escapeHtml(contact.phone || '')}"></div>
       <div class="field-group"><label>Years of Experience</label><input type="number" id="editKYears" value="${k.years || ''}"></div>
-      <div class="field-group"><label>Working Hours</label><input type="text" id="editKHours" value="${k.hours || ''}"></div>
+      <div class="field-group"><label>Working Hours</label><input type="text" id="editKHours" value="${escapeHtml(k.hours || '')}"></div>
       <div style="display:flex; gap:12px;">
-        <div class="field-group" style="flex:1;"><label>Latitude</label><input type="number" step="any" id="editKLat" value="${k.lat ?? ''}"></div>
-        <div class="field-group" style="flex:1;"><label>Longitude</label><input type="number" step="any" id="editKLng" value="${k.lng ?? ''}"></div>
+        <div class="field-group" style="flex:1;"><label>Exact Latitude (private — pickup use only)</label><input type="number" step="any" id="editKLat" value="${contact.lat ?? ''}"></div>
+        <div class="field-group" style="flex:1;"><label>Exact Longitude (private — pickup use only)</label><input type="number" step="any" id="editKLng" value="${contact.lng ?? ''}"></div>
       </div>
-      <div class="field-group"><label>Intro line 1</label><textarea id="editKS1">${k.s1 || ''}</textarea></div>
-      <div class="field-group"><label>Intro line 2</label><textarea id="editKS2">${k.s2 || ''}</textarea></div>
+      <p style="font-size:11px; color:var(--ink-dim); margin-top:-8px;">A rounded, public-safe version of this location is auto-generated for the map — the exact point above is never shown to site visitors.</p>
+      <div class="field-group"><label>Intro line 1</label><textarea id="editKS1">${escapeHtml(k.s1 || '')}</textarea></div>
+      <div class="field-group"><label>Intro line 2</label><textarea id="editKS2">${escapeHtml(k.s2 || '')}</textarea></div>
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:24px;">
         <button class="btn-small" onclick="showKaarigarDetails('${id}')">Cancel</button>
         <button class="btn-small marigold" onclick="saveKaarigarDetails('${id}')">Save Changes</button>
@@ -889,21 +1049,77 @@
     `;
   };
 
+  // ---------- One-time migration: split phone/gmail/exact lat-lng off the public doc ----------
+  // Safe to run multiple times — skips any kaarigar that's already been migrated (no legacy
+  // phone/gmail/lat/lng left on the main doc). Runs under the admin's own session, so it's
+  // covered by the isAdmin() branch of firestore.rules; no service-account key needed.
+  window.runContactMigration = async function() {
+    if (!confirm("Move phone/gmail/exact coordinates off the public kaarigars doc into a private subcollection? Safe to run more than once.")) return;
+    const entries = Object.entries(window.adminKaarigarsData);
+    const round2 = n => Number.isFinite(n) ? Math.round(n * 100) / 100 : null;
+    let migrated = 0, skipped = 0, failed = 0;
+    for (const [id, k] of entries) {
+      const hasLegacy = k.phone !== undefined || k.gmail !== undefined || k.lat !== undefined || k.lng !== undefined;
+      if (!hasLegacy) { skipped++; continue; }
+      try {
+        const exactLat = typeof k.lat === 'number' ? k.lat : parseFloat(k.lat);
+        const exactLng = typeof k.lng === 'number' ? k.lng : parseFloat(k.lng);
+        await setDoc(doc(db, 'kaarigars', id, 'private', 'contact'), {
+          phone: k.phone || '',
+          gmail: k.gmail || '',
+          lat: Number.isFinite(exactLat) ? exactLat : null,
+          lng: Number.isFinite(exactLng) ? exactLng : null
+        }, { merge: true });
+        await updateDoc(doc(db, 'kaarigars', id), {
+          approxLat: round2(exactLat),
+          approxLng: round2(exactLng),
+          phone: deleteField(),
+          gmail: deleteField(),
+          lat: deleteField(),
+          lng: deleteField()
+        });
+        migrated++;
+      } catch (err) {
+        console.error(`Migration failed for kaarigar ${id}:`, err);
+        failed++;
+      }
+    }
+    showToast(`Migration done — ${migrated} moved, ${skipped} already clean, ${failed} failed.`, failed ? 'error' : 'success');
+    loadData();
+  };
+
   window.saveKaarigarDetails = async function(id) {
     try {
+      const exactLat = parseFloat(document.getElementById('editKLat').value);
+      const exactLng = parseFloat(document.getElementById('editKLng').value);
+      // Public doc only ever gets the rounded coordinate — ~0.01deg is roughly 1.1km of
+      // fuzz, plenty for map browsing/distance-sort, not enough to pinpoint a home/shop.
+      const round2 = n => Number.isFinite(n) ? Math.round(n * 100) / 100 : null;
+
       await updateDoc(doc(db, 'kaarigars', id), {
         name: document.getElementById('editKName').value,
-        gmail: document.getElementById('editKGmail').value,
         trade: document.getElementById('editKTrade').value,
         area: document.getElementById('editKArea').value,
-        phone: document.getElementById('editKPhone').value,
         years: parseInt(document.getElementById('editKYears').value) || 0,
         hours: document.getElementById('editKHours').value,
-        lat: parseFloat(document.getElementById('editKLat').value),
-        lng: parseFloat(document.getElementById('editKLng').value),
+        approxLat: round2(exactLat),
+        approxLng: round2(exactLng),
         s1: document.getElementById('editKS1').value,
-        s2: document.getElementById('editKS2').value
+        s2: document.getElementById('editKS2').value,
+        // Clean up any legacy fields still sitting on old docs pre-migration.
+        phone: deleteField(),
+        gmail: deleteField(),
+        lat: deleteField(),
+        lng: deleteField()
       });
+
+      await setDoc(doc(db, 'kaarigars', id, 'private', 'contact'), {
+        phone: document.getElementById('editKPhone').value,
+        gmail: document.getElementById('editKGmail').value,
+        lat: Number.isFinite(exactLat) ? exactLat : null,
+        lng: Number.isFinite(exactLng) ? exactLng : null
+      }, { merge: true });
+
       showToast("Kaarigar details updated successfully!");
       document.getElementById('detailsModal').style.display = 'none';
       loadData();
@@ -934,22 +1150,9 @@
 
 <div class="panel-scrim" id="chatbotScrim" onclick="closeChatbot()"></div>
 <div class="panel" id="chatbotPanel">
-  <div class="chat-container">
-    <div class="chat-header">
-      <div style="flex:1; text-align:left;">Admin AI Assistant</div>
-      <button style="border:none; background:none; font-size:26px; cursor:pointer; color:var(--ink); line-height:1; padding:0; display:flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%;" onclick="closeChatbot()" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='none'">×</button>
-    </div>
-    <div class="chat-messages" id="chatMessages">
-    </div>
-    <div class="chat-input-area">
-      <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleChatKey(event)" />
-      <button onclick="sendChatMessage()" id="chatSendBtn">
-        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-      </button>
-    </div>
-  </div>
+  <div class="panel-close" onclick="closeChatbot()">×</div>
+  <iframe src="https://repairlink.streamlit.app/?embed=true" style="width:100%; height:100%; border:none;"></iframe>
 </div>
-<script type="module" src="chatbot.js?v=11"></script>
 
 <script>
   function openChatbot() {

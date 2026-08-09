@@ -21,9 +21,16 @@ const completeSignupBtn = document.getElementById('completeSignupBtn');
 
 // Automatically route users who are already logged in
 onAuthStateChanged(auth, async (user) => {
-  if (user && !currentUser) {
-    currentUser = user;
-    await checkUserRole(currentUser);
+  const authLoading = document.getElementById('authLoading');
+  if (user) {
+    if (!currentUser) {
+      currentUser = user;
+      await checkUserRole(currentUser);
+    }
+  } else {
+    // Not logged in
+    if (authLoading) authLoading.style.display = 'none';
+    if (authStep1) authStep1.style.display = 'block';
   }
 });
 
@@ -89,6 +96,13 @@ if(completeSignupBtn) {
 }
 
 function routeUser(role) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirect = urlParams.get('redirect');
+  if (redirect) {
+    window.location.href = decodeURIComponent(redirect);
+    return;
+  }
+
   if(role === 'admin') {
     window.location.href = 'Admin.html';
   } else if (role === 'kaarigar') {
