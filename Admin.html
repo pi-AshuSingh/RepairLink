@@ -660,15 +660,17 @@
     entries.forEach(([id, u]) => {
       const dateStr = u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown';
       let premiumAction = '';
-      if (u.isPremium) {
-        premiumAction = `
-          <span style="font-size:11px; color:#ffc935; font-weight:700; margin-right:4px;">✦ Premium</span>
-          <button class="btn-small danger" onclick="revokePremiumUser('${id}')" style="margin-right:8px;">Revoke</button>
-        `;
-      } else {
-        premiumAction = `
-          <button class="btn-small" onclick="grantPremiumUser('${id}')" style="margin-right:8px; background:var(--marigold); color:var(--surface);">Grant Premium</button>
-        `;
+      if (u.role === 'user') {
+        if (u.isPremium) {
+          premiumAction = `
+            <span style="font-size:11px; color:#ffc935; font-weight:700; margin-right:4px;">✦ Premium</span>
+            <button class="btn-small danger" onclick="revokePremiumUser('${id}')" style="margin-right:8px;">Revoke</button>
+          `;
+        } else {
+          premiumAction = `
+            <button class="btn-small" onclick="grantPremiumUser('${id}')" style="margin-right:8px; background:var(--marigold); color:var(--surface);">Grant Premium</button>
+          `;
+        }
       }
       
       body.innerHTML += `<tr>
