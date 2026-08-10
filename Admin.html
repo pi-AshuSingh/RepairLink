@@ -660,11 +660,17 @@
     entries.forEach(([id, u]) => {
       const dateStr = u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown';
       let premiumAction = '';
-      if (u.isPremium) {
-        premiumAction = `
-          <span style="font-size:11px; color:#ffc935; font-weight:700; margin-right:4px;">✦ Premium</span>
-          <button class="btn-small danger" onclick="revokePremiumUser('${id}')" style="margin-right:8px;">Revoke</button>
-        `;
+      if (u.role === 'user') {
+        if (u.isPremium) {
+          premiumAction = `
+            <span style="font-size:11px; color:#ffc935; font-weight:700; margin-right:4px;">✦ Premium</span>
+            <button class="btn-small danger" onclick="revokePremiumUser('${id}')" style="margin-right:8px;">Revoke</button>
+          `;
+        } else {
+          premiumAction = `
+            <button class="btn-small" onclick="grantPremiumUser('${id}')" style="margin-right:8px; background:var(--marigold); color:var(--surface);">Grant Premium</button>
+          `;
+        }
       }
       
       body.innerHTML += `<tr>
@@ -742,6 +748,25 @@
       loadData();
     } catch(err) {
       showToast("Error revoking premium: " + err.message, "error");
+    }
+  };
+
+  window.grantPremiumUser = async function(id) {
+    if (!confirm("Directly grant Premium Subscription to this user? They will receive 3 free services.")) return;
+    try {
+      const expiry = new Date();
+      expiry.setMonth(expiry.getMonth() + 3);
+      
+      await updateDoc(doc(db, 'users', id), {
+        isPremium: true,
+        premiumStatus: 'active',
+        freeServicesLeft: 3,
+        premiumExpiry: expiry
+      });
+      showToast("Premium Granted!");
+      loadData();
+    } catch (err) {
+      showToast("Error granting premium: " + err.message, 'error');
     }
   };
 
