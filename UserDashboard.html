@@ -393,7 +393,7 @@
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, query, where, getDocs, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, query, where, getDocs, increment, arrayUnion, arrayRemove, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   import { firebaseConfig } from './env.js';
 
@@ -412,42 +412,54 @@
     document.getElementById('navLogout').style.display = 'inline-block';
     
     // Check role
-    const userDoc = await getDoc(doc(db, 'users', user.uid));
-    if (userDoc.exists()) {
-      const role = userDoc.data().role;
-      if (role === 'user') {
-        document.getElementById('userContainer').style.display = 'flex';
-        
-        // Populate profile
-        const data = userDoc.data();
-        document.getElementById('profileName').textContent = data.displayName || 'Customer';
-        document.getElementById('profileEmail').textContent = data.email;
-        
-        if (data.photoURL) {
-          document.getElementById('profilePic').src = data.photoURL;
-          document.getElementById('profilePic').style.display = 'block';
-          document.getElementById('profileInitials').style.display = 'none';
+    let isFirstLoad = true;
+    onSnapshot(doc(db, 'users', user.uid), (userDoc) => {
+      if (userDoc.exists()) {
+        const role = userDoc.data().role;
+        if (role === 'user') {
+          document.getElementById('userContainer').style.display = 'flex';
+          
+          // Populate profile
+          const data = userDoc.data();
+          document.getElementById('profileName').textContent = data.displayName || 'Customer';
+          document.getElementById('profileEmail').textContent = data.email;
+          
+          if (data.photoURL) {
+            document.getElementById('profilePic').src = data.photoURL;
+            document.getElementById('profilePic').style.display = 'block';
+            document.getElementById('profileInitials').style.display = 'none';
+          } else {
+            document.getElementById('profileInitials').textContent = (data.displayName || '?').charAt(0).toUpperCase();
+          }
+          
+          window.currentUserData = data;
+          renderPremiumSection();
+          
+          if (isFirstLoad) {
+            loadLiveRequests(user.uid);
+            window.loadKaarigars();
+            isFirstLoad = false;
+          }
+          
+        } else if (role === 'admin') {
+          if (isFirstLoad) {
+            alert("You are an Admin. Redirecting to Admin Dashboard. But to get premium, please login as user.");
+            window.location.href = 'Admin.html';
+          }
         } else {
-          document.getElementById('profileInitials').textContent = (data.displayName || '?').charAt(0).toUpperCase();
+          if (isFirstLoad) {
+            alert("You are registered as a Kaarigar. Redirecting to your dashboard. But to get premium, please login as user.");
+            window.location.href = 'KaarigarDashboard.html';
+          }
         }
-        
-        window.currentUserData = data;
-        renderPremiumSection();
-        loadLiveRequests(user.uid);
-        window.loadKaarigars();
-        
-      } else if (role === 'admin') {
-        alert("You are an Admin. Redirecting to Admin Dashboard. But to get premium, please login as user.");
-        window.location.href = 'Admin.html';
       } else {
-        alert("You are registered as a Kaarigar. Redirecting to your dashboard. But to get premium, please login as user.");
-        window.location.href = 'KaarigarDashboard.html';
+        if (isFirstLoad) {
+          alert("Please login as a user to access premium features.");
+          const currentUrl = encodeURIComponent(window.location.pathname.split('/').pop() + window.location.search);
+          window.location.href = 'Auth.html?redirect=' + currentUrl;
+        }
       }
-    } else {
-      alert("Please login as a user to access premium features.");
-      const currentUrl = encodeURIComponent(window.location.pathname.split('/').pop() + window.location.search);
-      window.location.href = 'Auth.html?redirect=' + currentUrl;
-    }
+    });
   });
 
   window.renderPremiumSection = function() {
